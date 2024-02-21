@@ -1,0 +1,45 @@
+@startuml
+!include <C4/C4_Container>
+
+!define PYTHON https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons/python.puml
+!include PYTHON
+
+!define FLASK https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome/flask.puml
+!include FLASK
+
+!define POSTGRES https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons/postgresql.puml
+!include POSTGRES
+
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons/postgresql.puml
+!include ICONURL
+
+!define KAFKA  https://raw.githubusercontent.com/plantuml/plantuml-stdlib/master/cloudinsight/kafka.puml
+!include KAFKA
+
+Person(person, "Пользователь", "Пользователь социальной сети")
+
+Container(personal_account, "ЛК пользователя", "Flask", "ЛК пользователя", "flask")
+Container(per_acc_backend, "ЛК пользователя", "Python/PyCharm", "ЛК пользователя", "python")
+
+Container(statistics_service, "Statistics","Python/PyCharm", "Сервис статистики для подсчета лайков и просмотров", "python")
+Container(post_service, "Posts","Python/PyCharm", "Сервис постов и комментариев", "python")
+
+
+Container(db_user, "user_postgres","Postgres", "БД для хранения информации о пользователях для их аутентификации", "postgresql")
+Container(db_post, "post_postgres","Postgres", "БД для хранения информации о постах и комментариях", "postgresql")
+Container(db_statistics, "statistics_postgres","Postgres", "БД для хранения статистики о лайках и просмотрах", "postgresql")
+
+Container(message_broker, "views.topic","kafka", "Брокер сообщений", "kafka")
+
+Rel(person, personal_account, "Регистрация/аутентификация пользователя")
+Rel(per_acc_backend, statistics_service, "Получает статистику", "gRPC")
+Rel(personal_account, per_acc_backend, "Вызов методов REST")
+Rel(per_acc_backend, message_broker, "Пишет в топик")
+Rel(statistics_service, message_broker, "Читает топик")
+Rel(per_acc_backend, post_service, "Работает с постами/комментариями", "gRPC")
+
+Rel(per_acc_backend, db_user, "Сохраняет/читает информацию о пользователе для аутентификации", "SQL")
+Rel(post_service, db_post, "Сохраняет/читает информацию о постах и комментариях", "SQL")
+Rel(statistics_service, db_statistics, "Обновляет/читает информацию о лайках и просмотрах", "SQL")
+
+@enduml

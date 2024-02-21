@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Container>
+
+Person(person, "Пользователь", "Пользователь социальной сети")
+
+System(personal_account, "ЛК пользователя", "Главный сервис, который отвечает за клиентское API и за регистрацию и аутентификацию пользователей")
+System(statistics_service, "Сервис статистики", "Сервис статистики для подсчета лайков и просмотров")
+System(post_service, "Сервис постов", "Сервис постов и комментариев")
+
+Rel(person, personal_account, "Регистрация/аутентификация пользователя")
+Rel(personal_account, statistics_service, "Ведет учет лайков и комментариев")
+Rel(personal_account, post_service, "Управляет информацией о постах и комментариях")
+
+@enduml
