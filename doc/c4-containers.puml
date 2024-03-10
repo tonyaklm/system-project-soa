@@ -7,22 +7,25 @@
 !define FLASK https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome/flask.puml
 !include FLASK
 
+!define JAVASCRIPT https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons/javascript.puml
+!include JAVASCRIPT
+
 !define POSTGRES https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons/postgresql.puml
 !include POSTGRES
 
-!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons/postgresql.puml
-!include ICONURL
+!define POSTGRESQL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons/postgresql.puml
+!include POSTGRESQL
 
 !define KAFKA  https://raw.githubusercontent.com/plantuml/plantuml-stdlib/master/cloudinsight/kafka.puml
 !include KAFKA
 
 Person(person, "Пользователь", "Пользователь социальной сети")
 
-Container(personal_account, "ЛК пользователя", "Flask", "ЛК пользователя", "flask")
-Container(per_acc_backend, "ЛК пользователя", "Python/PyCharm", "ЛК пользователя", "python")
+Container(personal_account, "ЛК пользователя", "JavaScript", "ЛК пользователя", "javascript")
+Container(per_acc_backend, "ЛК пользователя", "Flask", "ЛК пользователя", "flask")
 
-Container(statistics_service, "Statistics","Python/PyCharm", "Сервис статистики для подсчета лайков и просмотров", "python")
-Container(post_service, "Posts","Python/PyCharm", "Сервис постов и комментариев", "python")
+Container(statistics_service, "Statistics","Python", "Сервис статистики для подсчета лайков и просмотров", "python")
+Container(post_service, "Posts","Python", "Сервис постов и комментариев", "python")
 
 
 Container(db_user, "user_postgres","Postgres", "БД для хранения информации о пользователях для их аутентификации", "postgresql")
