@@ -1,0 +1,178 @@
+openapi: 3.1.0
+info:
+  title: FastAPI
+  version: 0.1.0
+paths:
+  /registration:
+    post:
+      summary: Register a new user
+      operationId: user_registration_registration_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseUser'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /update-data:
+    post:
+      summary: Update users data
+      operationId: update_data_update_data_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseUpdateData'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /authentication:
+    get:
+      summary: User authorization
+      operationId: user_authorization_authentication_get
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseAuthorizationData'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    BaseAuthorizationData:
+      properties:
+        login:
+          type: string
+          title: Login
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+        - login
+        - password
+      title: BaseAuthorizationData
+    BaseUpdateData:
+      properties:
+        first_name:
+          type: string
+          title: First Name
+        last_name:
+          type: string
+          title: Last Name
+        date_of_birth:
+          type: string
+          title: Date Of Birth
+        mail:
+          type: string
+          title: Mail
+        phone_number:
+          type: string
+          title: Phone Number
+        login:
+          type: string
+          title: Login
+      type: object
+      required:
+        - first_name
+        - last_name
+        - date_of_birth
+        - mail
+        - phone_number
+        - login
+      title: BaseUpdateData
+    BaseUser:
+      properties:
+        first_name:
+          type: string
+          title: First Name
+        last_name:
+          type: string
+          title: Last Name
+        date_of_birth:
+          type: string
+          title: Date Of Birth
+        mail:
+          type: string
+          title: Mail
+        phone_number:
+          type: string
+          title: Phone Number
+        login:
+          type: string
+          title: Login
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+        - first_name
+        - last_name
+        - date_of_birth
+        - mail
+        - phone_number
+        - login
+        - password
+      title: BaseUser
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+        - loc
+        - msg
+        - type
+      title: ValidationError
