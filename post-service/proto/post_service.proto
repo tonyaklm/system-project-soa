@@ -1,0 +1,53 @@
+import "google/protobuf/timestamp.proto";
+
+
+service PostService{
+    rpc CreatePost (NewPost) returns (ResponseNewPost);
+    rpc UpdatePost (RequestUpdatePost) returns (EmptyMessage);
+    rpc DeletePost (RequestDeletePost) returns (EmptyMessage);
+    rpc GetPostById (RequestGetPostById) returns (PostItem);
+    rpc GetPosts (RequestGetPosts) returns (stream PostItem);
+}
+
+message NewPost {
+  optional int64 user_id = 1;
+  optional string title = 2;
+  optional string content = 3;
+}
+
+message ResponseNewPost {
+  optional int64 post_id = 1;
+}
+
+message RequestUpdatePost {
+  optional int64 user_id = 1;
+  optional int64 post_id = 2;
+  optional string new_title = 3;
+  optional string new_content = 4;
+}
+
+message RequestDeletePost {
+  optional int64 user_id = 1;
+  optional int64 post_id = 2;
+}
+
+message RequestGetPostById {
+  optional int64 user_id = 1;
+  optional int64 post_id = 2;
+}
+
+message RequestGetPosts {
+  optional int64 user_id = 1;
+}
+
+message PostItem {
+  optional int64 id = 1;
+  optional int64 user_id = 2;
+  optional google.protobuf.Timestamp time = 3;
+  optional string title = 4;
+  optional string content = 5;
+
+}
+
+message EmptyMessage {
+}

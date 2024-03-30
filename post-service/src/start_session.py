@@ -6,7 +6,6 @@ import typer
 import asyncio
 from config import settings
 
-
 engine = create_async_engine(settings.database_url, echo=True)
 Base = sqlalchemy.orm.declarative_base()
 async_session = sessionmaker(

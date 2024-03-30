@@ -23,8 +23,8 @@ class Repository:
         results = await session.execute(items)
         response_json = results.scalars().all()
         if not response_json:
-            return {}
-        return response_json[0]
+            return []
+        return response_json
 
     async def select_all(self, table, session: AsyncSession) -> json:
         """Makes select all available items"""
@@ -58,3 +58,6 @@ class Repository:
         stmt = update(table).where(getattr(table, column) == expected_value).values(new_values)
         await session.execute(stmt)
         await session.commit()
+
+
+repo = Repository()

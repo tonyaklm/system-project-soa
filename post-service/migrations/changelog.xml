@@ -5,7 +5,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
 
-    <include file="changesets/create-user-table.xml" relativeToChangelogFile="true" />
+    <include file="changesets/create-post-table.xml" relativeToChangelogFile="true" />
     <includeAll path="changesets/" relativeToChangelogFile="true" />
+
 
 </databaseChangeLog>

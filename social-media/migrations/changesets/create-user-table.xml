@@ -10,8 +10,12 @@
 
     <changeSet author="antonina" id="create-user-table">
         <createTable tableName="user" remarks="Таблица пользователей">
-            <column autoIncrement="false" name="login" type="VARCHAR" remarks="Логин пользователя">
+            <column autoIncrement="true" name="id" type="INTEGER" remarks="id пользователя">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="user_pkey"/>
+            </column>
+
+            <column name="login" type="VARCHAR" remarks="Логин пользователя">
+                <constraints nullable="false" unique="true" />
             </column>
 
             <column name="first_name" type="VARCHAR" remarks="Фамилия пользователя">

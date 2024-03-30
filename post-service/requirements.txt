@@ -1,0 +1,8 @@
+asyncpg==0.29.0
+grpcio==1.39.0
+protobuf==3.20.0
+SQLAlchemy==2.0.23
+typer==0.11.0
+pydantic==2.6.3
+pytz==2023.3.post1
+pydantic_settings==2.2.1
