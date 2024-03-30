@@ -28,7 +28,7 @@ async def create_post(post_data: models.BaseNewPost, session: AsyncSession = Dep
     return new_id
 
 
-@router.put("/update-post", status_code=200, summary="Update post", tags=['post'])
+@router.put("/post", status_code=200, summary="Update post", tags=['post'])
 async def update_post(post_data: models.BaseUpdatePost, session: AsyncSession = Depends(get_session)):
     auth_data = models.BaseAuthorizationData(login=post_data.login, password=post_data.password)
     auth_response = await user_authorization(auth_data, session)

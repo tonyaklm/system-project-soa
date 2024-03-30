@@ -100,12 +100,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-  /update-post:
+  /post:
     put:
       tags:
         - post
       summary: Update post
-      operationId: update_post_update_post_put
+      operationId: update_post_post_put
       requestBody:
         content:
           application/json:
