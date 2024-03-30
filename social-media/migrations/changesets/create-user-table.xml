@@ -1,0 +1,44 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet author="antonina" id="create-user-table">
+        <createTable tableName="user" remarks="Таблица пользователей">
+            <column autoIncrement="false" name="login" type="VARCHAR" remarks="Логин пользователя">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_pkey"/>
+            </column>
+
+            <column name="first_name" type="VARCHAR" remarks="Фамилия пользователя">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_name" type="VARCHAR" remarks="Имя пользователя">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="date_of_birth" type="TIMESTAMP" remarks="Дата рождения пользователя">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="mail" type="VARCHAR" remarks="Mail пользователя">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="phone_number" type="VARCHAR" remarks="Номер телефона пользователя">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="password" type="VARCHAR" remarks="Пароль пользователя">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
