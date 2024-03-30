@@ -27,12 +27,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-  /update-profile:
+  /profile:
     put:
       tags:
         - user
       summary: Update profile data
-      operationId: update_profile_update_profile_put
+      operationId: update_profile_profile_put
       requestBody:
         content:
           application/json:

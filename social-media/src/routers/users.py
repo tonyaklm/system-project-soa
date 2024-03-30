@@ -34,7 +34,7 @@ async def user_registration(user: models.BaseUser, session: AsyncSession = Depen
         "message": f"Пользователь {new_user.login} успешно зарегистрирован"})
 
 
-@router.put("/update-profile", status_code=200, summary="Update profile data", tags=['user'])
+@router.put("/profile", status_code=200, summary="Update profile data", tags=['user'])
 async def update_profile(new_data: models.BaseUpdateData, session: AsyncSession = Depends(get_session)):
     json_new_data = json.loads(new_data.model_dump_json())
     try:
