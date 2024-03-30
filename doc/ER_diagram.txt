@@ -2,7 +2,8 @@
 // Docs: https://dbml.dbdiagram.io/docs
 
 Table User {
-  login varchar [primary key]
+  id serial [primary key]
+  login varchar
   first_name varchar
   last_name varchar
   date_of_birth datetime
@@ -13,7 +14,8 @@ Table User {
 
 Table Comment {
   id serial [primary key]
-  user_login varchar
+
+  user_id integer
   content varchar
   post_id integer
   time datetime
@@ -22,7 +24,8 @@ Table Comment {
 
 Table Post {
   id serial [primary key]
-  user_login varchar
+
+  user_id integer
   time datetime
   title varchar
   content varchar
@@ -30,12 +33,13 @@ Table Post {
 
 Table Statistics {
   post_id serial [primary key]
+
   views integer
   likes integer
 }
 
-Ref: User.login < Comment.user_login
+Ref: User.id < Comment.user_id
 Ref: Post.id < Comment.post_id
-Ref: User.login < Post.user_login
+Ref: User.id < Post.user_id
 Ref: Post.id < Statistics.post_id
 Ref: Comment.id < Comment.previous_comment_id
