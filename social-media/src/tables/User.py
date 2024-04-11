@@ -1,4 +1,4 @@
-from sqlalchemy import Column, VARCHAR, PrimaryKeyConstraint, true
+from sqlalchemy import Column, VARCHAR, PrimaryKeyConstraint, INTEGER, Index
 import sqlalchemy
 from sqlalchemy.orm import DeclarativeBase
 
@@ -9,7 +9,8 @@ class Base(DeclarativeBase):
 
 class User(Base):
     __tablename__ = 'user'
-    login = Column(VARCHAR, primary_key=True)
+    id = Column(INTEGER, primary_key=True)
+    login = Column(VARCHAR, nullable=False, unique=True)
     first_name = Column(VARCHAR, nullable=False)
     last_name = Column(VARCHAR, nullable=False)
     date_of_birth = Column(sqlalchemy.types.DateTime(), nullable=False)
@@ -18,5 +19,6 @@ class User(Base):
     password = Column(VARCHAR, nullable=False)
 
     __table_args__ = (
-        PrimaryKeyConstraint('login', name='user_pkey'),
+        PrimaryKeyConstraint('id', name='user_pkey'),
+        Index('login_index' 'login')
     )

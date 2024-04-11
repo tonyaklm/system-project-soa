@@ -10,7 +10,7 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      POSTGRES_MULTIPLE_DATABASES: social_media
+      POSTGRES_MULTIPLE_DATABASES: social_media, post_service
     ports:
       - "5432:5432"
     networks:
@@ -23,7 +23,7 @@ services:
       timeout: 5s
       retries: 5
 
-  liquibase-migrations:
+  liquibase-migrations-user:
     image: liquibase/liquibase:4.19.0
     networks:
       - soa-network
@@ -31,6 +31,16 @@ services:
       - postgresql
     volumes:
       - ../../social-media/migrations:/app
+    command: --defaultsFile=/app/dev.properties update
+
+  liquibase-migrations-post:
+    image: liquibase/liquibase:4.19.0
+    networks:
+      - soa-network
+    depends_on:
+      - postgresql
+    volumes:
+      - ../../post-service/migrations:/app
     command: --defaultsFile=/app/dev.properties update
 
   pgadmin:
@@ -63,8 +73,19 @@ services:
     ports:
       - "0.0.0.0:8000:8000"
     build:
-      context: ../../social-media
-      dockerfile: src/Dockerfile
+      context: ../../
+      dockerfile: social-media/src/Dockerfile
+    networks:
+      - soa-network
+  post-service:
+    container_name: "post-service"
+    image: post-service
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:8001:8001"
+    build:
+      context: ../../
+      dockerfile: post-service/src/Dockerfile
     networks:
       - soa-network
 

@@ -5,6 +5,8 @@ info:
 paths:
   /registration:
     post:
+      tags:
+        - user
       summary: Register a new user
       operationId: user_registration_registration_post
       requestBody:
@@ -25,10 +27,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-  /update-data:
-    post:
-      summary: Update users data
-      operationId: update_data_update_data_post
+  /profile:
+    put:
+      tags:
+        - user
+      summary: Update profile data
+      operationId: update_profile_profile_put
       requestBody:
         content:
           application/json:
@@ -49,6 +53,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
   /authentication:
     get:
+      tags:
+        - user
       summary: User authorization
       operationId: user_authorization_authentication_get
       requestBody:
@@ -63,6 +69,129 @@ paths:
           content:
             application/json:
               schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /create-post:
+    post:
+      tags:
+        - post
+      summary: Create new post
+      operationId: create_post_create_post_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseNewPost'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewPostResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /post:
+    put:
+      tags:
+        - post
+      summary: Update post
+      operationId: update_post_post_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseUpdatePost'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /delete-post:
+    delete:
+      tags:
+        - post
+      summary: Delete post by its id
+      operationId: delete_post_delete_post_delete
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseDeletePost'
+        required: true
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /get-post-by-id:
+    get:
+      tags:
+        - post
+      summary: Get post by its id
+      operationId: get_post_by_id_get_post_by_id_get
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestGetPostById'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostItem'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /get-posts:
+    get:
+      tags:
+        - post
+      summary: Get all posts for user
+      operationId: get_posts_get_posts_get
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestGetPosts'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/PostItem'
+                type: array
+                title: Response Get Posts Get Posts Get
         '422':
           description: Validation Error
           content:
@@ -84,6 +213,44 @@ components:
         - login
         - password
       title: BaseAuthorizationData
+    BaseDeletePost:
+      properties:
+        login:
+          type: string
+          title: Login
+        post_id:
+          type: integer
+          title: Post Id
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+        - login
+        - post_id
+        - password
+      title: BaseDeletePost
+    BaseNewPost:
+      properties:
+        login:
+          type: string
+          title: Login
+        title:
+          type: string
+          title: Title
+        content:
+          type: string
+          title: Content
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+        - login
+        - title
+        - content
+        - password
+      title: BaseNewPost
     BaseUpdateData:
       properties:
         first_name:
@@ -113,6 +280,31 @@ components:
         - phone_number
         - login
       title: BaseUpdateData
+    BaseUpdatePost:
+      properties:
+        login:
+          type: string
+          title: Login
+        post_id:
+          type: integer
+          title: Post Id
+        new_title:
+          type: string
+          title: New Title
+        new_content:
+          type: string
+          title: New Content
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+        - login
+        - post_id
+        - new_title
+        - new_content
+        - password
+      title: BaseUpdatePost
     BaseUser:
       properties:
         first_name:
@@ -155,6 +347,71 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    NewPostResponse:
+      properties:
+        post_id:
+          type: integer
+          title: Post Id
+      type: object
+      required:
+        - post_id
+      title: NewPostResponse
+    PostItem:
+      properties:
+        id:
+          type: integer
+          title: Id
+        user_id:
+          type: integer
+          title: User Id
+        title:
+          type: string
+          title: Title
+        time:
+          type: string
+          format: date-time
+          title: Time
+        content:
+          type: string
+          title: Content
+      type: object
+      required:
+        - id
+        - user_id
+        - title
+        - time
+        - content
+      title: PostItem
+    RequestGetPostById:
+      properties:
+        user_login:
+          type: string
+          title: User Login
+        post_id:
+          type: integer
+          title: Post Id
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+        - user_login
+        - post_id
+        - password
+      title: RequestGetPostById
+    RequestGetPosts:
+      properties:
+        login:
+          type: string
+          title: Login
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+        - login
+        - password
+      title: RequestGetPosts
     ValidationError:
       properties:
         loc:
