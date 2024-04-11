@@ -9,6 +9,7 @@ from common.Repository import repo
 from Post import Post
 import logging
 import google.protobuf.json_format as js
+from google.protobuf.empty_pb2 import Empty
 from sqlalchemy.exc import DataError, DBAPIError
 
 logging.basicConfig(level=logging.DEBUG)
@@ -48,11 +49,11 @@ class PostService(post_service_pb2_grpc.PostService):
         if not existing_item:
             context.set_code(grpc.StatusCode.NOT_FOUND)
             context.set_details(f'Поста с id = {request.post_id} не существует')
-            return post_service_pb2.EmptyMessage()
+            return Empty()
         if existing_item[0].user_id != request.user_id:
             context.set_code(grpc.StatusCode.PERMISSION_DENIED)
             context.set_details(f'Для пользователя {request.user_id} нет доступа к посту {request.post_id}')
-            return post_service_pb2.EmptyMessage()
+            return Empty()
 
         update_item = {
             'title': request.new_title,
@@ -60,7 +61,7 @@ class PostService(post_service_pb2_grpc.PostService):
         }
         async for session in get_session():
             await repo.update_by_criteria(Post, 'id', request.post_id, update_item, session)
-        return post_service_pb2.EmptyMessage()
+        return Empty()
 
     async def DeletePost(self, request, context):
         """Удалить пост"""
@@ -71,15 +72,15 @@ class PostService(post_service_pb2_grpc.PostService):
         if not existing_item:
             context.set_code(grpc.StatusCode.NOT_FOUND)
             context.set_details(f'Поста с id = {request.post_id} не существует')
-            return post_service_pb2.EmptyMessage()
+            return Empty()
         if existing_item[0].user_id != request.user_id:
             context.set_code(grpc.StatusCode.PERMISSION_DENIED)
             context.set_details(f'Для пользователя {request.user_id} нет доступа к посту {request.post_id}')
-            return post_service_pb2.EmptyMessage()
+            return Empty()
 
         async for session in get_session():
             await repo.delete_item(Post, 'id', request.post_id, session)
-        return post_service_pb2.EmptyMessage()
+        return Empty()
 
     async def GetPostById(self, request, context):
         """Получить пост по его id"""

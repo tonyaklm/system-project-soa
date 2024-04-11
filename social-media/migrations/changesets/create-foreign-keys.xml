@@ -8,14 +8,10 @@
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
         http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
 
-    <changeSet author="antonina" id="create-indexes">
-        <createIndex tableName="user" indexName="login_index">
-            <column name="login"/>
-        </createIndex>
+    <changeSet author="antonina" id="create-foreign-keys">
 
-        <createIndex tableName="session" indexName="session_key_index">
-            <column name="session_key"/>
-        </createIndex>
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="session" constraintName="user_id_fk"
+                                 referencedColumnNames="id" referencedTableName="user"/>
 
     </changeSet>
 

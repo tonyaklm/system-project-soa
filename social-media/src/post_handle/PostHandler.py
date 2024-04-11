@@ -1,23 +1,20 @@
-from typing import List, Dict
-
-import grpc
-import google.protobuf.json_format as js
-
 import os
 import sys
 
 sys.path.append(os.path.join(os.getcwd(), 'proto'))
 from proto import post_service_pb2
 from proto import post_service_pb2_grpc
+
+from typing import List, Dict
+import grpc
+import google.protobuf.json_format as js
 import json
 from config import settings
 from post_handle.convert_codes import convert_grpc_code_into_http
-
+from fastapi.responses import JSONResponse
 import logging
 
 _LOGGER = logging.getLogger(__name__)
-
-from fastapi.responses import JSONResponse
 
 
 class PostHandler:

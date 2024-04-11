@@ -6,7 +6,6 @@ import sys
 sys.path.append(os.path.join(os.getcwd(), 'proto'))
 from proto import post_service_pb2_grpc
 
-from start_session import cli
 import logging
 import PostService
 import asyncio
@@ -24,4 +23,3 @@ async def serve():
 
 if __name__ == "__main__":
     asyncio.run(serve())
-    cli()

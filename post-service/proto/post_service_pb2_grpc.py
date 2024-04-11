@@ -2,6 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 import post_service_pb2 as post__service__pb2
 
 
@@ -22,12 +23,12 @@ class PostServiceStub(object):
         self.UpdatePost = channel.unary_unary(
                 '/PostService/UpdatePost',
                 request_serializer=post__service__pb2.RequestUpdatePost.SerializeToString,
-                response_deserializer=post__service__pb2.EmptyMessage.FromString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
         self.DeletePost = channel.unary_unary(
                 '/PostService/DeletePost',
                 request_serializer=post__service__pb2.RequestDeletePost.SerializeToString,
-                response_deserializer=post__service__pb2.EmptyMessage.FromString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
         self.GetPostById = channel.unary_unary(
                 '/PostService/GetPostById',
@@ -85,12 +86,12 @@ def add_PostServiceServicer_to_server(servicer, server):
             'UpdatePost': grpc.unary_unary_rpc_method_handler(
                     servicer.UpdatePost,
                     request_deserializer=post__service__pb2.RequestUpdatePost.FromString,
-                    response_serializer=post__service__pb2.EmptyMessage.SerializeToString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'DeletePost': grpc.unary_unary_rpc_method_handler(
                     servicer.DeletePost,
                     request_deserializer=post__service__pb2.RequestDeletePost.FromString,
-                    response_serializer=post__service__pb2.EmptyMessage.SerializeToString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'GetPostById': grpc.unary_unary_rpc_method_handler(
                     servicer.GetPostById,
@@ -142,7 +143,7 @@ class PostService(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/PostService/UpdatePost',
             post__service__pb2.RequestUpdatePost.SerializeToString,
-            post__service__pb2.EmptyMessage.FromString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -159,7 +160,7 @@ class PostService(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/PostService/DeletePost',
             post__service__pb2.RequestDeletePost.SerializeToString,
-            post__service__pb2.EmptyMessage.FromString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

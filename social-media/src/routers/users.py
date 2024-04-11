@@ -8,11 +8,13 @@ from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 from common.Repository import repo
 import models
-from User import User
+from tables.User import User
+from tables.SessionDao import SessionDao
 from start_session import get_session
 from passwords import encrypt_password, check_encrypted_password
+import uuid
 
-router = APIRouter()
+router = APIRouter(prefix='/user')
 
 
 @router.post("/registration", status_code=200, summary="Register a new user", tags=['user'])
@@ -46,16 +48,26 @@ async def update_profile(new_data: models.BaseUpdateData, session: AsyncSession 
         "message": f"Данные успешно обновлены"})
 
 
-@router.get("/authentication", status_code=200, summary="User authorization", tags=['user'])
+@router.post("/authentication", status_code=200, summary="User authorization",
+             response_model=models.SessionKey, tags=['user'])
 async def user_authorization(authorization_data: models.BaseAuthorizationData,
                              session: AsyncSession = Depends(get_session)):
     user = await repo.select_by_criteria(User, ["login"], [authorization_data.login], session)
     if not user:
-        return JSONResponse(status_code=404, content={
+        return JSONResponse(status_code=401, content={
             "message": f"Пользователь с логином {authorization_data.login} не существует"})
-    if check_encrypted_password(authorization_data.password, user[0].password):
-        return JSONResponse(status_code=200, content={
-            "message": f"Авторизация прошла успешно",
-            "user_id": user[0].id})
-    return JSONResponse(status_code=400, content={
-        "message": f"Неверный пароль"})
+    user = user[0]
+    if not check_encrypted_password(authorization_data.password, user.password):
+        return JSONResponse(status_code=401, content={
+            "message": f"Неверный пароль"})
+
+    active_session = await repo.select_by_criteria(SessionDao, ['user_id'], [user.id], session)
+    session_key = uuid.uuid4()
+    if not active_session:
+        await repo.post_item(SessionDao, {
+            'user_id': user.id,
+            'session_key': session_key
+        }, session)
+    else:
+        await repo.update_by_criteria(SessionDao, 'user_id', user.id, {'session_key': session_key}, session)
+    return models.SessionKey(session_key=session_key)

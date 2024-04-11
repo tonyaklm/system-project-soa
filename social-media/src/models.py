@@ -1,3 +1,4 @@
+from uuid import UUID
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -27,35 +28,14 @@ class BaseAuthorizationData(BaseModel):
 
 
 class BaseNewPost(BaseModel):
-    login: str
     title: str
     content: str
-    password: str
 
 
 class BaseUpdatePost(BaseModel):
-    login: str
     post_id: int
     new_title: str
     new_content: str
-    password: str
-
-
-class BaseDeletePost(BaseModel):
-    login: str
-    post_id: int
-    password: str
-
-
-class RequestGetPostById(BaseModel):
-    user_login: str
-    post_id: int
-    password: str
-
-
-class RequestGetPosts(BaseModel):
-    login: str
-    password: str
 
 
 class NewPostResponse(BaseModel):
@@ -68,3 +48,7 @@ class PostItem(BaseModel):
     title: str
     time: datetime
     content: str
+
+
+class SessionKey(BaseModel):
+    session_key: UUID

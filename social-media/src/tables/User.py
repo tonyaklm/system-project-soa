@@ -19,6 +19,6 @@ class User(Base):
     password = Column(VARCHAR, nullable=False)
 
     __table_args__ = (
-        PrimaryKeyConstraint('login', name='user_pkey'),
+        PrimaryKeyConstraint('id', name='user_pkey'),
         Index('login_index' 'login')
     )

@@ -1,3 +1,4 @@
+from google.protobuf import empty_pb2 as _empty_pb2
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
@@ -68,7 +69,3 @@ class PostItem(_message.Message):
     title: str
     content: str
     def __init__(self, id: _Optional[int] = ..., user_id: _Optional[int] = ..., time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., title: _Optional[str] = ..., content: _Optional[str] = ...) -> None: ...
-
-class EmptyMessage(_message.Message):
-    __slots__ = []
-    def __init__(self) -> None: ...
