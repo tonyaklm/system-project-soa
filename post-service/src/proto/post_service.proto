@@ -8,7 +8,7 @@ service PostService{
     rpc UpdatePost (RequestUpdatePost) returns (google.protobuf.Empty);
     rpc DeletePost (RequestDeletePost) returns (google.protobuf.Empty);
     rpc GetPostById (RequestGetPostById) returns (PostItem);
-    rpc GetPosts (RequestGetPosts) returns (stream PostItem);
+    rpc GetPosts (google.protobuf.Empty) returns (stream PostItem);
 }
 
 message NewPost {
@@ -34,12 +34,7 @@ message RequestDeletePost {
 }
 
 message RequestGetPostById {
-  int64 user_id = 1;
-  int64 post_id = 2;
-}
-
-message RequestGetPosts {
-  int64 user_id = 1;
+  int64 post_id = 1;
 }
 
 message PostItem {

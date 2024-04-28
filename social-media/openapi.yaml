@@ -3,12 +3,12 @@ info:
   title: FastAPI
   version: 0.1.0
 paths:
-  /registration:
+  /user/registration:
     post:
       tags:
         - user
       summary: Register a new user
-      operationId: user_registration_registration_post
+      operationId: user_registration_user_registration_post
       requestBody:
         content:
           application/json:
@@ -27,12 +27,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-  /profile:
+  /user/profile:
     put:
       tags:
         - user
       summary: Update profile data
-      operationId: update_profile_profile_put
+      operationId: update_profile_user_profile_put
       requestBody:
         content:
           application/json:
@@ -51,12 +51,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-  /authentication:
-    get:
+  /user/authentication:
+    post:
       tags:
         - user
       summary: User authorization
-      operationId: user_authorization_authentication_get
+      operationId: user_authorization_user_authentication_post
       requestBody:
         content:
           application/json:
@@ -68,25 +68,34 @@ paths:
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/SessionKey'
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-  /create-post:
+  /post/create:
     post:
       tags:
         - post
       summary: Create new post
-      operationId: create_post_create_post_post
+      operationId: create_post_post_create_post
+      parameters:
+        - name: session-key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Session-Key
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/BaseNewPost'
-        required: true
       responses:
         '200':
           description: Successful Response
@@ -100,18 +109,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-  /post:
+  /post/:
     put:
       tags:
         - post
       summary: Update post
-      operationId: update_post_post_put
+      operationId: update_post_post__put
+      parameters:
+        - name: session-key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Session-Key
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/BaseUpdatePost'
-        required: true
       responses:
         '200':
           description: Successful Response
@@ -124,18 +141,73 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-  /delete-post:
+    get:
+      tags:
+        - post
+      summary: Get all posts for user
+      operationId: get_posts_post__get
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            description: Page number
+            default: 1
+            title: Page
+          description: Page number
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 100
+            minimum: 1
+            description: Page size
+            default: 50
+            title: Size
+          description: Page size
+        - name: session-key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Session-Key
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Page_PostItem_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  '/post/{post_id}':
     delete:
       tags:
         - post
       summary: Delete post by its id
-      operationId: delete_post_delete_post_delete
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BaseDeletePost'
-        required: true
+      operationId: delete_post_post__post_id__delete
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Post Id
+        - name: session-key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Session-Key
       responses:
         '204':
           description: Successful Response
@@ -145,18 +217,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-  /get-post-by-id:
     get:
       tags:
         - post
       summary: Get post by its id
-      operationId: get_post_by_id_get_post_by_id_get
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RequestGetPostById'
-        required: true
+      operationId: get_post_by_id_post__post_id__get
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Post Id
+        - name: session-key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Session-Key
       responses:
         '200':
           description: Successful Response
@@ -170,28 +249,64 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-  /get-posts:
-    get:
+  /statistics/likes:
+    post:
       tags:
-        - post
-      summary: Get all posts for user
-      operationId: get_posts_get_posts_get
+        - statistics
+      summary: Post information about likes
+      operationId: post_likes_statistics_likes_post
+      parameters:
+        - name: session-key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Session-Key
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RequestGetPosts'
-        required: true
+              $ref: '#/components/schemas/PostId'
       responses:
         '200':
           description: Successful Response
           content:
             application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/PostItem'
-                type: array
-                title: Response Get Posts Get Posts Get
+                $ref: '#/components/schemas/HTTPValidationError'
+  /statistics/views:
+    post:
+      tags:
+        - statistics
+      summary: Post information about views
+      operationId: post_likes_statistics_views_post
+      parameters:
+        - name: session-key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Session-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostId'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
         '422':
           description: Validation Error
           content:
@@ -213,43 +328,18 @@ components:
         - login
         - password
       title: BaseAuthorizationData
-    BaseDeletePost:
-      properties:
-        login:
-          type: string
-          title: Login
-        post_id:
-          type: integer
-          title: Post Id
-        password:
-          type: string
-          title: Password
-      type: object
-      required:
-        - login
-        - post_id
-        - password
-      title: BaseDeletePost
     BaseNewPost:
       properties:
-        login:
-          type: string
-          title: Login
         title:
           type: string
           title: Title
         content:
           type: string
           title: Content
-        password:
-          type: string
-          title: Password
       type: object
       required:
-        - login
         - title
         - content
-        - password
       title: BaseNewPost
     BaseUpdateData:
       properties:
@@ -282,9 +372,6 @@ components:
       title: BaseUpdateData
     BaseUpdatePost:
       properties:
-        login:
-          type: string
-          title: Login
         post_id:
           type: integer
           title: Post Id
@@ -294,16 +381,11 @@ components:
         new_content:
           type: string
           title: New Content
-        password:
-          type: string
-          title: Password
       type: object
       required:
-        - login
         - post_id
         - new_title
         - new_content
-        - password
       title: BaseUpdatePost
     BaseUser:
       properties:
@@ -356,6 +438,53 @@ components:
       required:
         - post_id
       title: NewPostResponse
+    Page_PostItem_:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/PostItem'
+          type: array
+          title: Items
+        total:
+          anyOf:
+            - type: integer
+              minimum: 0
+            - type: 'null'
+          title: Total
+        page:
+          anyOf:
+            - type: integer
+              minimum: 1
+            - type: 'null'
+          title: Page
+        size:
+          anyOf:
+            - type: integer
+              minimum: 1
+            - type: 'null'
+          title: Size
+        pages:
+          anyOf:
+            - type: integer
+              minimum: 0
+            - type: 'null'
+          title: Pages
+      type: object
+      required:
+        - items
+        - total
+        - page
+        - size
+      title: 'Page[PostItem]'
+    PostId:
+      properties:
+        post_id:
+          type: integer
+          title: Post Id
+      type: object
+      required:
+        - post_id
+      title: PostId
     PostItem:
       properties:
         id:
@@ -382,36 +511,16 @@ components:
         - time
         - content
       title: PostItem
-    RequestGetPostById:
+    SessionKey:
       properties:
-        user_login:
+        session_key:
           type: string
-          title: User Login
-        post_id:
-          type: integer
-          title: Post Id
-        password:
-          type: string
-          title: Password
+          format: uuid
+          title: Session Key
       type: object
       required:
-        - user_login
-        - post_id
-        - password
-      title: RequestGetPostById
-    RequestGetPosts:
-      properties:
-        login:
-          type: string
-          title: Login
-        password:
-          type: string
-          title: Password
-      type: object
-      required:
-        - login
-        - password
-      title: RequestGetPosts
+        - session_key
+      title: SessionKey
     ValidationError:
       properties:
         loc:

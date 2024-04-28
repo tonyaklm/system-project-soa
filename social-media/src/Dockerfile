@@ -15,7 +15,6 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 EXPOSE 8000
 
 COPY social-media/src/ /
-COPY post-service/proto/ /proto/
 COPY common/ /common/
 
 CMD ["python", "main.py"]

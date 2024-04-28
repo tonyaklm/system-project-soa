@@ -3,7 +3,7 @@
 import grpc
 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
-import post_service_pb2 as post__service__pb2
+import common.proto.post_service_pb2 as post__service__pb2
 
 
 class PostServiceStub(object):
@@ -37,7 +37,7 @@ class PostServiceStub(object):
                 )
         self.GetPosts = channel.unary_stream(
                 '/PostService/GetPosts',
-                request_serializer=post__service__pb2.RequestGetPosts.SerializeToString,
+                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
                 response_deserializer=post__service__pb2.PostItem.FromString,
                 )
 
@@ -100,7 +100,7 @@ def add_PostServiceServicer_to_server(servicer, server):
             ),
             'GetPosts': grpc.unary_stream_rpc_method_handler(
                     servicer.GetPosts,
-                    request_deserializer=post__service__pb2.RequestGetPosts.FromString,
+                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                     response_serializer=post__service__pb2.PostItem.SerializeToString,
             ),
     }
@@ -193,7 +193,7 @@ class PostService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_stream(request, target, '/PostService/GetPosts',
-            post__service__pb2.RequestGetPosts.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             post__service__pb2.PostItem.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

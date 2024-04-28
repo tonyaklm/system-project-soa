@@ -1,0 +1,8 @@
+networks:
+  soa-network:
+    name: "soa-network"
+include:
+  - tools/database-dev/docker-compose.yml
+  - tools/migrations/docker-compose.yml
+  - tools/services/docker-compose.yml
+  - tools/kafka-dev/docker-compose.yml

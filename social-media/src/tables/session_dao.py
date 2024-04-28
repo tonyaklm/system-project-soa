@@ -1,6 +1,5 @@
 from sqlalchemy import Column, PrimaryKeyConstraint, INTEGER, Index, UUID, ForeignKeyConstraint
-from sqlalchemy.orm import DeclarativeBase
-from tables.User import Base
+from database import Base
 
 
 class SessionDao(Base):

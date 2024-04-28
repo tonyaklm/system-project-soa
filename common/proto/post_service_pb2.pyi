@@ -43,18 +43,10 @@ class RequestDeletePost(_message.Message):
     def __init__(self, user_id: _Optional[int] = ..., post_id: _Optional[int] = ...) -> None: ...
 
 class RequestGetPostById(_message.Message):
-    __slots__ = ["user_id", "post_id"]
-    USER_ID_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ["post_id"]
     POST_ID_FIELD_NUMBER: _ClassVar[int]
-    user_id: int
     post_id: int
-    def __init__(self, user_id: _Optional[int] = ..., post_id: _Optional[int] = ...) -> None: ...
-
-class RequestGetPosts(_message.Message):
-    __slots__ = ["user_id"]
-    USER_ID_FIELD_NUMBER: _ClassVar[int]
-    user_id: int
-    def __init__(self, user_id: _Optional[int] = ...) -> None: ...
+    def __init__(self, post_id: _Optional[int] = ...) -> None: ...
 
 class PostItem(_message.Message):
     __slots__ = ["id", "user_id", "time", "title", "content"]
