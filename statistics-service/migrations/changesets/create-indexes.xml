@@ -13,6 +13,10 @@
             <column name="post_id"/>
         </createIndex>
 
+        <createIndex tableName="statistics" indexName="author_index">
+            <column name="author_id"/>
+        </createIndex>
+
         <createIndex tableName="statistics" indexName="statistics_type_index">
             <column name="statistics_type"/>
         </createIndex>

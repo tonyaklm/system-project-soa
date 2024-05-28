@@ -6,7 +6,7 @@ import grpc
 import google.protobuf.json_format as js
 import json
 from config import settings
-from post_handle.convert_codes import convert_grpc_code_into_http
+from handle.convert_codes import convert_grpc_code_into_http
 from fastapi import HTTPException
 import logging
 from google.protobuf.empty_pb2 import Empty
@@ -76,7 +76,7 @@ class PostHandler:
         return posts
 
 
-grpc_server_address = settings.grpc_server_address
+grpc_server_address = settings.post_server_address
 
 channel = grpc.insecure_channel(grpc_server_address, options=(('grpc.enable_http_proxy', 0),))
 stub = post_service_pb2_grpc.PostServiceStub(channel)

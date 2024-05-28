@@ -32,7 +32,6 @@ def test_post_user():
         "password": "user_password"
     }
     resp = requests.post(social_media_url + '/user/registration', json=user)
-    # assert resp.status_code == 200, resp.text
 
 
 def user_authentication():

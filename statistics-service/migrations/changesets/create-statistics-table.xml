@@ -18,6 +18,10 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="author_id" type="INTEGER" remarks="id автора, который создал пост">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="statistics_type" type="VARCHAR" remarks="тип лайк или просмотр">
                 <constraints nullable="false" checkConstraint="statistics_type IN ('like', 'view')"/>
             </column>

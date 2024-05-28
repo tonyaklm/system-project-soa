@@ -1,8 +1,9 @@
-from sqlalchemy import select, delete, update
+from sqlalchemy import select, delete, update, func, desc, Selectable
 from typing import Any
 from sqlalchemy.ext.asyncio import AsyncSession
 import json
 from sqlalchemy.orm import DeclarativeBase
+from typing import List
 
 
 class Base(DeclarativeBase):
@@ -58,6 +59,26 @@ class Repository:
         stmt = update(table).where(getattr(table, column) == expected_value).values(new_values)
         await session.execute(stmt)
         await session.commit()
+
+    async def select_count(self, select_column: Selectable, condition: List, group_by_columns: List[Selectable],
+                           session):
+        count_func = func.count(select_column.distinct()).label("selected_statistics")
+        stmt = select(count_func).group_by(*group_by_columns).where(*condition)
+        results = await session.execute(stmt)
+        return results.scalar()
+
+    async def select_with_group_by(self, selected_columns: List[Selectable], agg_column: Selectable,
+                                   group_by_columns: List[Selectable], condition: List,
+                                   limit_amount: int, session):
+        count_func = func.count(agg_column.distinct()).label("selected_statistics")
+        stmt = select(*selected_columns,
+                      count_func).group_by(
+            *group_by_columns).where(
+            *condition).order_by(
+            desc(count_func)).limit(
+            limit_amount)
+        results = await session.execute(stmt)
+        return results.all()
 
 
 repo = Repository()
