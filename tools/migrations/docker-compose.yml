@@ -1,0 +1,30 @@
+services:
+  liquibase-migrations-user:
+    image: liquibase/liquibase:4.19.0
+    networks:
+      - soa-network
+    depends_on:
+      - postgresql
+    volumes:
+      - ../../social-media/migrations:/app
+    command: --defaultsFile=/app/dev.properties update
+
+  liquibase-migrations-post:
+    image: liquibase/liquibase:4.19.0
+    networks:
+      - soa-network
+    depends_on:
+      - postgresql
+    volumes:
+      - ../../post-service/migrations:/app
+    command: --defaultsFile=/app/dev.properties update
+
+  liquibase-migrations-statistics:
+    image: liquibase/liquibase:4.19.0
+    networks:
+      - soa-network
+    depends_on:
+      - postgresql
+    volumes:
+      - ../../statistics-service/migrations:/app
+    command: --defaultsFile=/app/dev.properties update

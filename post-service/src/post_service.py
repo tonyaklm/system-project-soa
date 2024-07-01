@@ -1,12 +1,8 @@
-import os
-import sys
-
-sys.path.append(os.path.join(os.getcwd(), 'proto'))
-from proto import post_service_pb2
-from proto import post_service_pb2_grpc
-from start_session import get_session
-from common.Repository import repo
-from Post import Post
+from common.proto import post_service_pb2
+from common.proto import post_service_pb2_grpc
+from database import async_session
+from common.repository import repo
+from tables.post import Post
 import logging
 import google.protobuf.json_format as js
 from google.protobuf.empty_pb2 import Empty
@@ -31,7 +27,7 @@ class PostService(post_service_pb2_grpc.PostService):
             'content': request.content
         }
         new_post = None
-        async for session in get_session():
+        async with async_session() as session:
             try:
                 new_post = await repo.post_item(Post, new_item, session)
             except DBAPIError or DataError:
@@ -44,7 +40,7 @@ class PostService(post_service_pb2_grpc.PostService):
     async def UpdatePost(self, request, context):
         """ Обновить пост"""
         existing_item = None
-        async for session in get_session():
+        async with async_session() as session:
             existing_item = await repo.select_by_criteria(Post, ['id'], [request.post_id], session)
         if not existing_item:
             context.set_code(grpc.StatusCode.NOT_FOUND)
@@ -59,7 +55,7 @@ class PostService(post_service_pb2_grpc.PostService):
             'title': request.new_title,
             'content': request.new_content
         }
-        async for session in get_session():
+        async with async_session() as session:
             await repo.update_by_criteria(Post, 'id', request.post_id, update_item, session)
         return Empty()
 
@@ -67,7 +63,7 @@ class PostService(post_service_pb2_grpc.PostService):
         """Удалить пост"""
 
         existing_item = None
-        async for session in get_session():
+        async with async_session() as session:
             existing_item = await repo.select_by_criteria(Post, ['id'], [request.post_id], session)
         if not existing_item:
             context.set_code(grpc.StatusCode.NOT_FOUND)
@@ -78,22 +74,18 @@ class PostService(post_service_pb2_grpc.PostService):
             context.set_details(f'Для пользователя {request.user_id} нет доступа к посту {request.post_id}')
             return Empty()
 
-        async for session in get_session():
+        async with async_session() as session:
             await repo.delete_item(Post, 'id', request.post_id, session)
         return Empty()
 
     async def GetPostById(self, request, context):
         """Получить пост по его id"""
         post_item = None
-        async for session in get_session():
+        async with async_session() as session:
             post_item = await repo.select_by_criteria(Post, ['id'], [request.post_id], session)
             if not post_item:
                 context.set_code(grpc.StatusCode.NOT_FOUND)
                 context.set_details(f'Поста с id = {request.post_id} не существует')
-                return post_service_pb2.PostItem()
-            if post_item[0].user_id != request.user_id:
-                context.set_code(grpc.StatusCode.PERMISSION_DENIED)
-                context.set_details(f'Для пользователя {request.user_id} нет доступа к посту {request.post_id}')
                 return post_service_pb2.PostItem()
         post_item_dict = post_item[0].as_dict()
         post_item_dict['time'] = post_item_dict['time'].isoformat()
@@ -103,8 +95,8 @@ class PostService(post_service_pb2_grpc.PostService):
     async def GetPosts(self, request, context):
         """Получить посты"""
         post_items = []
-        async for session in get_session():
-            post_items = await repo.select_by_criteria(Post, ['user_id'], [request.user_id], session)
+        async with async_session() as session:
+            post_items = await repo.select_all(Post, session)
 
         for i in range(len(post_items)):
             post_item_dict = post_items[i].as_dict()

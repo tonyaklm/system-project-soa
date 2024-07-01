@@ -1,10 +1,6 @@
 from sqlalchemy import Column, VARCHAR, PrimaryKeyConstraint, INTEGER, Index
 import sqlalchemy
-from sqlalchemy.orm import DeclarativeBase
-
-
-class Base(DeclarativeBase):
-    pass
+from database import Base
 
 
 class User(Base):

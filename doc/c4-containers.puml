@@ -4,9 +4,6 @@
 !define PYTHON https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons/python.puml
 !include PYTHON
 
-!define FLASK https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome/flask.puml
-!include FLASK
-
 !define JAVASCRIPT https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons/javascript.puml
 !include JAVASCRIPT
 
@@ -22,7 +19,7 @@
 Person(person, "Пользователь", "Пользователь социальной сети")
 
 Container(personal_account, "ЛК пользователя", "JavaScript", "ЛК пользователя", "javascript")
-Container(per_acc_backend, "ЛК пользователя", "Flask", "ЛК пользователя", "flask")
+Container(per_acc_backend, "ЛК пользователя", "Python", "ЛК пользователя", "python")
 
 Container(statistics_service, "Statistics","Python", "Сервис статистики для подсчета лайков и просмотров", "python")
 Container(post_service, "Posts","Python", "Сервис постов и комментариев", "python")

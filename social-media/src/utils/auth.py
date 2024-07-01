@@ -1,9 +1,9 @@
-from fastapi import Security, HTTPException, status, Depends, Header
-from tables.User import User
-from tables.SessionDao import SessionDao
-from start_session import get_session
+from fastapi import HTTPException, status, Depends, Header
+from tables.user import User
+from tables.session_dao import SessionDao
+from utils.session import get_session
 from sqlalchemy.ext.asyncio import AsyncSession
-from common.Repository import repo
+from common.repository import repo
 from uuid import UUID
 
 

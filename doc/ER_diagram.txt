@@ -32,14 +32,15 @@ Table Post {
 }
 
 Table Statistics {
-  post_id serial [primary key]
+  post_id integer
 
-  views integer
-  likes integer
+  user_id integer
+  statistics_type varchar
 }
 
 Ref: User.id < Comment.user_id
 Ref: Post.id < Comment.post_id
 Ref: User.id < Post.user_id
 Ref: Post.id < Statistics.post_id
+Ref: User.id < Statistics.user_id
 Ref: Comment.id < Comment.previous_comment_id

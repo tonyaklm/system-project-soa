@@ -1,0 +1,43 @@
+services:
+  social-media:
+    container_name: "social-media"
+    image: social-media
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    build:
+      context: ../../
+      dockerfile: social-media/src/Dockerfile
+    env_file:
+      - ../../.env
+    networks:
+      - soa-network
+  post-service:
+    container_name: "post-service"
+    image: post-service
+    restart: unless-stopped
+    ports:
+      - "8001:8000"
+    build:
+      context: ../../
+      dockerfile: post-service/src/Dockerfile
+    env_file:
+      - ../../.env
+    networks:
+      - soa-network
+  statistics-service:
+    container_name: "statistics-service"
+    image: statistics-service
+    restart: unless-stopped
+    ports:
+      - "8002:8000"
+    build:
+      context: ../../
+      dockerfile: statistics-service/src/Dockerfile
+    env_file:
+      - ../../.env
+    networks:
+      - soa-network
+networks:
+  soa-network:
+    name: "soa-network"

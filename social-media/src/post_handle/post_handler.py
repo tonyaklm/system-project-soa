@@ -1,9 +1,5 @@
-import os
-import sys
-
-sys.path.append(os.path.join(os.getcwd(), 'proto'))
-from proto import post_service_pb2
-from proto import post_service_pb2_grpc
+from common.proto import post_service_pb2
+from common.proto import post_service_pb2_grpc
 
 from typing import List, Dict
 import grpc
@@ -11,8 +7,9 @@ import google.protobuf.json_format as js
 import json
 from config import settings
 from post_handle.convert_codes import convert_grpc_code_into_http
-from fastapi.responses import JSONResponse
+from fastapi import HTTPException
 import logging
+from google.protobuf.empty_pb2 import Empty
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,7 +24,7 @@ class PostHandler:
         try:
             response = self._stub.CreatePost(protobuf_request)
         except grpc.RpcError as e:
-            return JSONResponse(status_code=convert_grpc_code_into_http(e), content={
+            raise HTTPException(status_code=convert_grpc_code_into_http(e), detail={
                 "message": e.details()})
         response_dict = js.MessageToDict(response, preserving_proto_field_name=True)
         return response_dict
@@ -38,7 +35,7 @@ class PostHandler:
         try:
             response = self._stub.UpdatePost(protobuf_request)
         except grpc.RpcError as e:
-            return JSONResponse(status_code=convert_grpc_code_into_http(e), content={
+            raise HTTPException(status_code=convert_grpc_code_into_http(e), detail={
                 "message": e.details()})
         response_dict = js.MessageToDict(response, preserving_proto_field_name=True)
         return response_dict
@@ -50,7 +47,7 @@ class PostHandler:
         try:
             response = self._stub.DeletePost(protobuf_request)
         except grpc.RpcError as e:
-            return JSONResponse(status_code=convert_grpc_code_into_http(e), content={
+            raise HTTPException(status_code=convert_grpc_code_into_http(e), detail={
                 "message": e.details()})
         response_dict = js.MessageToDict(response, preserving_proto_field_name=True)
         return response_dict
@@ -62,16 +59,15 @@ class PostHandler:
         try:
             response = self._stub.GetPostById(protobuf_request)
         except grpc.RpcError as e:
-            return JSONResponse(status_code=convert_grpc_code_into_http(e), content={
+            raise HTTPException(status_code=convert_grpc_code_into_http(e), detail={
                 "message": e.details()})
         response_dict = js.MessageToDict(response, preserving_proto_field_name=True)
         return response_dict
 
     def GetPosts(self, content: json) -> List[Dict]:
         """Получить посты"""
-        protobuf_request = js.ParseDict(content, post_service_pb2.RequestGetPosts(), ignore_unknown_fields=True)
 
-        response_iterator = self._stub.GetPosts(protobuf_request)
+        response_iterator = self._stub.GetPosts(Empty())
 
         posts = []
         for post_item in list(response_iterator):
