@@ -168,13 +168,6 @@ paths:
             default: 50
             title: Size
           description: Page size
-        - name: session-key
-          in: header
-          required: true
-          schema:
-            type: string
-            format: uuid
-            title: Session-Key
       responses:
         '200':
           description: Successful Response
@@ -229,13 +222,6 @@ paths:
           schema:
             type: integer
             title: Post Id
-        - name: session-key
-          in: header
-          required: true
-          schema:
-            type: string
-            format: uuid
-            title: Session-Key
       responses:
         '200':
           description: Successful Response
@@ -249,12 +235,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-  /statistics/likes:
+  /statistics/like:
     post:
       tags:
         - statistics
       summary: Post information about likes
-      operationId: post_likes_statistics_likes_post
+      operationId: post_likes_statistics_like_post
       parameters:
         - name: session-key
           in: header
@@ -281,12 +267,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-  /statistics/views:
+  /statistics/view:
     post:
       tags:
         - statistics
       summary: Post information about views
-      operationId: post_likes_statistics_views_post
+      operationId: post_likes_statistics_view_post
       parameters:
         - name: session-key
           in: header
@@ -307,6 +293,80 @@ paths:
           content:
             application/json:
               schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /statistics/top/views:
+    get:
+      tags:
+        - statistics
+      summary: Top 5 posts by amount of views
+      operationId: top_views_statistics_top_views_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TopViewedPost'
+                type: array
+                title: Response Top Views Statistics Top Views Get
+  /statistics/top/likes:
+    get:
+      tags:
+        - statistics
+      summary: Top 5 posts by amount of likes
+      operationId: top_likes_statistics_top_likes_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TopLikedPost'
+                type: array
+                title: Response Top Likes Statistics Top Likes Get
+  /statistics/top/user:
+    get:
+      tags:
+        - statistics
+      summary: Top 3 users by amount of likes
+      operationId: top_users_statistics_top_user_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TopUser'
+                type: array
+                title: Response Top Users Statistics Top User Get
+  '/statistics/{post_id}':
+    get:
+      tags:
+        - statistics
+      summary: Statistics for one post
+      operationId: post_statistics_statistics__post_id__get
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Post Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostStats'
         '422':
           description: Validation Error
           content:
@@ -511,6 +571,18 @@ components:
         - time
         - content
       title: PostItem
+    PostStats:
+      properties:
+        likes:
+          type: integer
+          title: Likes
+          default: 0
+        views:
+          type: integer
+          title: Views
+          default: 0
+      type: object
+      title: PostStats
     SessionKey:
       properties:
         session_key:
@@ -521,6 +593,53 @@ components:
       required:
         - session_key
       title: SessionKey
+    TopLikedPost:
+      properties:
+        post_id:
+          type: integer
+          title: Post Id
+        author_login:
+          type: string
+          title: Author Login
+        likes:
+          type: integer
+          title: Likes
+          default: 0
+      type: object
+      required:
+        - post_id
+        - author_login
+      title: TopLikedPost
+    TopUser:
+      properties:
+        author_login:
+          type: string
+          title: Author Login
+        likes:
+          type: integer
+          title: Likes
+          default: 0
+      type: object
+      required:
+        - author_login
+      title: TopUser
+    TopViewedPost:
+      properties:
+        post_id:
+          type: integer
+          title: Post Id
+        author_login:
+          type: string
+          title: Author Login
+        views:
+          type: integer
+          title: Views
+          default: 0
+      type: object
+      required:
+        - post_id
+        - author_login
+      title: TopViewedPost
     ValidationError:
       properties:
         loc:

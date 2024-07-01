@@ -5,24 +5,41 @@ from kafka import kafka_consumer
 from config import settings
 import asyncio
 from consume.consume_statistics import consume_statistics
+import grpc
+from concurrent import futures
+from common.proto import statistics_service_pb2_grpc
+import statistics_service
+import grpc
+from concurrent import futures
+import asyncio
+from config import settings
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
+async def consume():
     await kafka_consumer.init_consumer(settings.statistics_consume_topic, consume_statistics)
     asyncio.create_task(kafka_consumer.consume())
 
-    yield
+
+async def stop_consume():
     await kafka_consumer.stop()
 
 
-app = FastAPI(lifespan=lifespan)
+async def serve():
+    server = grpc.aio.server(futures.ThreadPoolExecutor(max_workers=10))
+    statistics_service_pb2_grpc.add_StatisticsServiceServicer_to_server(
+        statistics_service.StatisticsService(), server)
+    server.add_insecure_port(settings.insecure_port)
+    await server.start()
+    await server.wait_for_termination()
 
 
-@app.post("/", status_code=200)
-async def root(request: Request):
-    return
+async def lifespan():
+    await consume()
+    try:
+        await serve()
+    finally:
+        await stop_consume()
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", reload=True, port=8000)
+    asyncio.run(lifespan())

@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from schemas import posts_schemas
-from post_handle.post_handler import post_handler
+from handle.post_handler import post_handler
 from fastapi import Depends
 import json
 from tables.user import User
@@ -35,13 +35,13 @@ async def delete_post(post_id: int, user: User = Depends(get_user)):
 
 @router.get("/{post_id}", status_code=200, summary="Get post by its id",
             response_model=posts_schemas.PostItem, tags=['post'])
-async def get_post_by_id(post_id: int, user: User = Depends(get_user)):
+async def get_post_by_id(post_id: int):
     json_post_data = {'post_id': post_id}
     return post_handler.GetPostById(json_post_data)
 
 
 @router.get("/", status_code=200, summary="Get all posts for user",
             response_model=Page[posts_schemas.PostItem], tags=['post'])
-async def get_posts(user: User = Depends(get_user)) -> Page[posts_schemas.PostItem]:
+async def get_posts() -> Page[posts_schemas.PostItem]:
     posts = post_handler.GetPosts({})
     return paginate(posts)

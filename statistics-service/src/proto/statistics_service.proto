@@ -1,0 +1,33 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+
+service StatisticsService{
+    rpc PostsStatistics (Post) returns (ResponsePostsStatistics);
+    rpc TopUsers (google.protobuf.Empty) returns (stream TopUser);
+    rpc TopPosts (StatisticsType) returns (stream TopPost);
+}
+
+message Post {
+  int64 post_id = 1;
+}
+
+message ResponsePostsStatistics {
+  int64 likes = 1;
+  int64 views = 2;
+}
+
+message TopUser {
+  int64 author_id = 1;
+  int64 likes = 2;
+}
+
+message StatisticsType {
+  string given_type = 1;
+}
+
+message TopPost {
+  int64 post_id = 1;
+  int64 top_amount = 2;
+  int64 author_id = 3;
+}
